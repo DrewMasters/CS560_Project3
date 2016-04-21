@@ -2,11 +2,17 @@
 
 import xml.sax
 import re
+import time
 
 def lp(content):
 	#get links from text of page
-	return re.findall(	
-	
+	print "\ncontent"
+	print content
+	r=re.findall(r'\[\[(.+?)\]\] |\[\[(.+?)\|.+\]\]',content)	
+	print "\nregex results"
+	print r
+	time.sleep(3)
+	return r
 
 class pp(xml.sax.ContentHandler):
 	def __init__(self):
@@ -27,18 +33,17 @@ class pp(xml.sax.ContentHandler):
 			self.flagcontent=True
 	
 	def endElement(self, name):
-		self.link_list[self.title]=lp(self.content)
+		if self.flagcontent:
+			self.link_list[self.title]=lp(self.content)
+			self.content=""
 		self.flagtitle=False
 		self.flagcontent=False
-		self.content=""
 
 	def characters(self, content):
 		if self.flagtitle:
 			self.title=content
 			self.title_list[self.title]=self.title_count
-			self.link_list[self.title]=[]
 			self.title_count+=self.title_count
-			print self.title
 		elif self.flagcontent:
 			self.content+=content
 	
