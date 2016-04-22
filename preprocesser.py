@@ -17,7 +17,7 @@ def lp(content):
 
 class pp(xml.sax.ContentHandler):
 	def __init__(self):
-		self.title_list = []
+		self.title_list = {}
 		self.link_list = [] 
 		self.title = ""
 		self.count=0
@@ -26,8 +26,10 @@ class pp(xml.sax.ContentHandler):
 		self.adfile = open('adlist.txt','w')
 		self.content=""
 		file1=open('simplewiki-20160305-all-titles','r')
+		ind = 1
 		for l in file1:
-			self.title_list.append(l.strip().lower())
+			self.title_list[l.strip().lower()] = ind
+			ind+=1
 
 	def startElement(self, name, attrs):
 		#reads in the opening tag and sets flags for reading in stuff between tags
@@ -45,11 +47,12 @@ class pp(xml.sax.ContentHandler):
 			print self.count
 			self.count+=1
 			for l in self.link_list:
-				tmp = l.encode('ascii','ignore') 
-				if tmp in self.title_list and str(self.title).lower() in self.title_list:
-					self.adfile.write(str(self.title_list.index(str(self.title).lower())))
+				tmp = l.encode('ascii','ignore').lower() 
+				tmp2 = self.title.encode('ascii','ignore').lower() 
+				if tmp in self.title_list and tmp2 in self.title_list:
+					self.adfile.write(str(self.title_list[tmp2]))
 					self.adfile.write(" ")
-					self.adfile.write(str(self.title_list.index(tmp)))
+					self.adfile.write(str(self.title_list[tmp]))
 					self.adfile.write("\n")
 			self.content=""
 			self.link_list=[]

@@ -8,11 +8,11 @@ import org.apache.spark.graphx._
 import org.apache.spark.rdd.RDD
 
 // Load the edges as a graph
-val graph = GraphLoader.edgeListFile(sc, "///example/followers.txt")
+val graph = GraphLoader.edgeListFile(sc, "///example/adlist.txt")
 // Run PageRank
 val ranks = graph.staticPageRank(25).vertices
 // Join the ranks with the usernames
-val users = sc.textFile("///example/users.txt").map { line =>
+val users = sc.textFile("///example/test").map { line =>
   val fields = line.split(",")
   (fields(0).toLong, fields(1))
 }
