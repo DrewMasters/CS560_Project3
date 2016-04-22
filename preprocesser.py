@@ -20,13 +20,14 @@ class pp(xml.sax.ContentHandler):
 		self.title_list = []
 		self.link_list = [] 
 		self.title = ""
+		self.count=0
 		self.flagtitle = False
 		self.flagcontent = False
 		self.adfile = open('adlist.txt','w')
 		self.content=""
 		file1=open('simplewiki-20160305-all-titles','r')
 		for l in file1:
-			self.title_list.append(l.strip())
+			self.title_list.append(l.strip().lower())
 
 	def startElement(self, name, attrs):
 		#reads in the opening tag and sets flags for reading in stuff between tags
@@ -41,11 +42,15 @@ class pp(xml.sax.ContentHandler):
 		#parse content, generate adjacency list, and reset everything
 		if self.flagcontent:
 			self.link_list=lp(self.content)
+			print self.count
+			self.count+=1
 			for l in self.link_list:
-				print l.encode('utf-8')
-				self.adfile.write(str(self.title_list.index(str(self.title))))
-				self.adfile.write(" ")
-				self.adfile.write(str(self.title_list.index(str(l))))
+				tmp = l.encode('ascii','ignore') 
+				if tmp in self.title_list and str(self.title).lower() in self.title_list:
+					self.adfile.write(str(self.title_list.index(str(self.title).lower())))
+					self.adfile.write(" ")
+					self.adfile.write(str(self.title_list.index(tmp)))
+					self.adfile.write("\n")
 			self.content=""
 			self.link_list=[]
 		self.flagtitle=False
