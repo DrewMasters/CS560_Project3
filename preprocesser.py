@@ -12,13 +12,13 @@ def lp(content):
 	for t in r:
 		tmp2 = t.split("|")
 		if not "File" in tmp2[0]: 
-			tmp.append(tmp2[0])
+			tmp.append(tmp2[0].replace(" ","_"))
 	return tmp
 
 class pp(xml.sax.ContentHandler):
 	def __init__(self):
 		self.title_list = []
-		self.link_list = {}
+		self.link_list = [] 
 		self.title = ""
 		self.flagtitle = False
 		self.flagcontent = False
@@ -40,8 +40,14 @@ class pp(xml.sax.ContentHandler):
 	def endElement(self, name):
 		#parse content, generate adjacency list, and reset everything
 		if self.flagcontent:
-			self.link_list[self.title]=lp(self.content)
+			self.link_list=lp(self.content)
+			for l in self.link_list:
+				print l.encode('utf-8')
+				self.adfile.write(str(self.title_list.index(str(self.title))))
+				self.adfile.write(" ")
+				self.adfile.write(str(self.title_list.index(str(l))))
 			self.content=""
+			self.link_list=[]
 		self.flagtitle=False
 		self.flagcontent=False
 
