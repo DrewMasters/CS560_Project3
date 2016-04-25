@@ -1,0 +1,3 @@
+created ranks_process.txt
+python process_ranks.py > result.txt
+sort -k 2 -g -r result.txt > sorted.txt
